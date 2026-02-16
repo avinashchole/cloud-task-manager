@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cloud Task Manager</title>
+</head>
+<body>
+    <h2>Cloud Task Manager</h2>
+
+    <form action="/add" method="POST">
+        <input type="text" name="task" placeholder="Enter task" required>
+        <button type="submit">Add Task</button>
+    </form>
+
+    <ul>
+        {% for task in tasks %}
+            <li>
+                {{ task[1] }}
+                <a href="/delete/{{ task[0] }}">Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>
