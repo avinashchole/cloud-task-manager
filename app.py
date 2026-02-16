@@ -3,7 +3,6 @@ import mysql.connector
 
 app = Flask(__name__)
 
-# Connect to MySQL Database
 db = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -12,11 +11,10 @@ db = mysql.connector.connect(
     use_pure=True
 )
 
-
 @app.route('/')
 def index():
     cursor = db.cursor()
-    cursor.execute("SELECT * FROM tasks")
+    cursor.execute("SELECT * FROM tasks ORDER BY created_at DESC")
     tasks = cursor.fetchall()
     return render_template("index.html", tasks=tasks)
 
@@ -28,10 +26,17 @@ def add_task():
     db.commit()
     return redirect('/')
 
+@app.route('/complete/<int:id>')
+def complete_task(id):
+    cursor = db.cursor()
+    cursor.execute("UPDATE tasks SET status='Completed' WHERE id=%s", (id,))
+    db.commit()
+    return redirect('/')
+
 @app.route('/delete/<int:id>')
 def delete_task(id):
     cursor = db.cursor()
-    cursor.execute("DELETE FROM tasks WHERE id = %s", (id,))
+    cursor.execute("DELETE FROM tasks WHERE id=%s", (id,))
     db.commit()
     return redirect('/')
 
